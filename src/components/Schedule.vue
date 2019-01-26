@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
-    <Header></Header>
-    <Schedule></Schedule>
+    <Header />
+    <Schedule />
   </div>
 </template>
 

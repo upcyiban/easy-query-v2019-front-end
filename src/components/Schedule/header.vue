@@ -2,22 +2,22 @@
   <div class="Header">
     <div class="time-container">
       <div class="week-container">
-        <div class="week-controller">
+        <div class="week-controller" @click="weekcontroller(-1)">
           <i class="fa fa-chevron-left" aria-hidden="true"></i>
         </div>
         <div class="week-time">
-          <div>第1周</div>
+          <div>第{{thisweek}}周</div>
           <span>大三第一学期</span>
         </div>
-        <div class="week-controller">
+        <div class="week-controller" @click="weekcontroller(1)">
           <i class="fa fa-chevron-right" aria-hidden="true"></i>
         </div>
       </div>
       <div class="function-container">
-        <div class="addcourse">
+        <div class="addcourse" @click="$router.push('/schedule/addcourse')">
           <i class="fa fa-plus"></i>
         </div>
-        <div class="backindex">
+        <div class="backindex" @click="$router.push('/')">
           <i class="fa fa-home"></i>
         </div>
       </div>
@@ -30,7 +30,18 @@ export default {
   name: 'Header',
   data () {
     return {
-
+      thisweek: 1,
+      thisday: 1
+    }
+  },
+  methods: {
+    weekcontroller (i) {
+      this.thisweek += i
+      if (this.thisweek <= 0) {
+        this.thisweek = 1
+      } else if (this.thisweek >= 18) {
+        this.thisweek = 18
+      }
     }
   }
 }

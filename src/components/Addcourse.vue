@@ -1,20 +1,258 @@
 <template>
   <div class="main-container">
-    
+    <div class="submit-container">
+      <button class="submit" @click="submit">保存</button>
+    </div>
+    <div class="form-container">
+      <div class="form-frame" align="center">
+        <div class="class-name">
+          <div class="headerCol">课程名称</div>
+          <div class="headerCol input-container">
+            <input type="text" placeholder="未填写">
+          </div>
+        </div>
+        <div class="class-infos">
+          <div class="class-info" id="title-1" @click="EditInfo(1)">
+            <div class="headerCol">{{titles[1]}}</div>
+            <div class="headerCol input-container">
+              <input type="text" placeholder="未填写">
+            </div>
+          </div>
+          <div class="class-info" id="title-2" @click="EditInfo(2)">
+            <div class="headerCol">{{titles[2]}}</div>
+            <div class="headerCol input-container"></div>
+          </div>
+          <div class="class-info weeks-frame" @click="EditInfo(2)">
+            <div class="weeks-container">
+              <div v-for="i in 18" :key="i" class="week-container" @click="selectweek(i)">
+                <div class="week-button" :id="'week-' + i">{{i}}</div>
+              </div>
+            </div>
+            <div class="functions-container">
+              <div v-for="i in 3" :key="i" class="radio-container">
+                <div class="radio" @click="radio(i)">
+                  <div class="radio-inner"></div>
+                </div>
+                {{radios[i-1]}}
+              </div>
+            </div>
+          </div>
+          <div class="class-info" id="title-3" @click="EditInfo(3)">
+            <div class="headerCol">{{titles[3]}}</div>
+            <div class="headerCol input-container">
+              <input type="text" placeholder="未填写">
+            </div>
+          </div>
+          <div class="class-info" id="title-4" @click="EditInfo(4)">
+            <div class="headerCol">{{titles[4]}}</div>
+            <div class="headerCol input-container">
+              <input type="text" placeholder="未填写">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'addcourse',
-  data () {
+  name: "addcourse",
+  data() {
     return {
-
+      titles: ["课程名称", "　　教室", "　　周数", "　　节数", "　　老师"],
+      radios: ["单周", "双周", "全选"]
+    };
+  },
+  methods: {
+    submit() {
+      console.log("点击了保存按钮");
+    },
+    selectweek(i) {
+      let id = "week-" + i;
+      if (
+        document.getElementById(id).style.border == "none" ||
+        document.getElementById(id).style.border == ""
+      ) {
+        document.getElementById(id).style.border = "2px black solid";
+      } else {
+        document.getElementById(id).style.border = "none";
+      }
+    },
+    EditInfo(item) {
+      for (let i = 1; i <= 4; i++) {
+        let id = "title-" + i;
+        document.getElementById(id).style.borderLeft = "1px grey solid";
+        document.getElementById(id).style.width = "98%";
+      }
+      let id = "title-" + item;
+      console.log(id);
+      document.getElementById(id).style.borderLeft = "7px black solid";
+      document.getElementById(id).style.width = "100%";
+    },
+    radio(num) {
+      if (num == 1) {
+        for (let i = 1; i <= 18; i++) {
+          if (i % 2 == 1) {
+            let id = "week-" + i;
+            document.getElementById(id).style.border = "2px black solid";
+          } else {
+            let id = "week-" + i;
+            document.getElementById(id).style.border = "none";
+          }
+        }
+      } else if (num == 2) {
+        for (let i = 1; i <= 18; i++) {
+          if (i % 2 == 0) {
+            let id = "week-" + i;
+            document.getElementById(id).style.border = "2px black solid";
+          } else {
+            let id = "week-" + i;
+            document.getElementById(id).style.border = "none";
+          }
+        }
+      } else if (num == 3) {
+        for (let i = 1; i <= 18; i++) {
+          let id = "week-" + i;
+          document.getElementById(id).style.border = "2px black solid";
+        }
+      }
     }
+  },
+  created() {
+    document.title = "添加课程";
   }
-}
+};
 </script>
 
 <style scoped>
-
+.main-container {
+  width: 100%;
+  height: 100%;
+}
+.submit-container {
+  width: 100%;
+  height: 7%;
+}
+.submit {
+  width: 15%;
+  height: 100%;
+  font-size: 1.2rem;
+  margin-left: 83%;
+  background: none;
+  outline: none;
+  border: none;
+}
+.form-container {
+  width: 100%;
+  height: 93%;
+}
+.form-frame {
+  width: 80%;
+  height: 80%;
+  margin-left: 10%;
+}
+.class-name {
+  height: 10%;
+  width: 98%;
+  border-left: white 1px solid;
+  display: flex;
+  flex-direction: row;
+}
+.headerCol {
+  width: 30%;
+  height: 100%;
+  font-size: 1.4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+.input-container {
+  margin-left: 5%;
+  width: 65%;
+}
+.input-container input {
+  width: 100%;
+  font-size: 1.3rem;
+  border: none;
+}
+.class-infos {
+  width: 100%;
+  height: 90%;
+}
+.class-info {
+  height: 10%;
+  width: 98%;
+  border-left: grey 1px solid;
+  display: flex;
+  flex-direction: row;
+}
+.weeks-frame {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+}
+.weeks-container {
+  margin-left: 10%;
+  width: 90%;
+  height: 70%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.week-container {
+  width: 16%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.week-button {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  border: none;
+  text-align: center;
+}
+.functions-container {
+  margin-left: 10%;
+  width: 90%;
+  height: 30%;
+  display: flex;
+  flex-direction: row;
+}
+.radio-container {
+  width: 33.33%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.radio {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.6rem;
+  border-radius: 50%;
+  border: 1px lightgray solid;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.radio-inner {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  border: 1px grey solid;
+}
+@media screen and (max-width: 321px) {
+  .submit {
+    font-size: 1rem;
+  }
+  .headerCol {
+    font-size: 1.2rem;
+  }
+}
 </style>
