@@ -231,4 +231,9 @@ export default {
   0%   {transform:rotate(0);}
   100% {transform:rotate(360deg);}
 }
+@media screen and (max-width: 321px) {
+  .button-title {
+    font-size: 1.2rem;
+  }
+}
 </style>

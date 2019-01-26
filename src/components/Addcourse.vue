@@ -247,12 +247,20 @@ export default {
   border-radius: 50%;
   border: 1px grey solid;
 }
-@media screen and (max-width: 321px) {
+@media screen and (max-width: 376px) {
   .submit {
     font-size: 1rem;
   }
   .headerCol {
     font-size: 1.2rem;
+  }
+}
+@media screen and (max-width: 321px) {
+  .submit {
+    font-size: 1rem;
+  }
+  .headerCol {
+    font-size: 1rem;
   }
 }
 </style>

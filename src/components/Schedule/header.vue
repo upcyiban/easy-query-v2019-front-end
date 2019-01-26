@@ -59,8 +59,8 @@ export default {
 }
 .week-container {
   height: 100%;
-  width: 40%;
-  margin-left: 30%;
+  width: 45%;
+  margin-left: 27.5%;
   display: flex;
   flex-direction: row;
 }
@@ -84,8 +84,8 @@ export default {
   font-size: 0.8rem;
 }
 .function-container {
-  width: 30%;
-  margin-left: 10%;
+  width: 25%;
+  margin-left: 2.5%;
   font-size: 1.7rem;
   display: flex;
   flex-direction: row;
@@ -93,7 +93,7 @@ export default {
   opacity: 0.6;
 }
 .addcourse {
-  margin-left: 1.4rem;
+  margin-left: 1.2rem;
 }
 .backindex {
   margin-left: 1rem;
