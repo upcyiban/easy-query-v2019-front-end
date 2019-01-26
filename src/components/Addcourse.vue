@@ -31,7 +31,7 @@
             <div class="functions-container">
               <div v-for="i in 3" :key="i" class="radio-container">
                 <div class="radio" @click="radio(i)">
-                  <div class="radio-inner"></div>
+                  <div class="radio-inner" :id="'radio-inner-' + i"></div>
                 </div>
                 {{radios[i-1]}}
               </div>
@@ -92,6 +92,12 @@ export default {
     },
     radio(num) {
       if (num == 1) {
+        for (let i = 1;i <= 3;i ++) {
+          let ID = 'radio-inner-' + i
+          document.getElementById(ID).style.backgroundColor = "white";
+        }
+        let ID = 'radio-inner-' + num
+        document.getElementById(ID).style.backgroundColor = "black";
         for (let i = 1; i <= 18; i++) {
           if (i % 2 == 1) {
             let id = "week-" + i;
@@ -102,6 +108,12 @@ export default {
           }
         }
       } else if (num == 2) {
+        for (let i = 1;i <= 3;i ++) {
+          let ID = 'radio-inner-' + i
+          document.getElementById(ID).style.backgroundColor = "white";
+        }
+        let ID = 'radio-inner-' + num
+        document.getElementById(ID).style.backgroundColor = "black";
         for (let i = 1; i <= 18; i++) {
           if (i % 2 == 0) {
             let id = "week-" + i;
@@ -112,6 +124,12 @@ export default {
           }
         }
       } else if (num == 3) {
+        for (let i = 1;i <= 3;i ++) {
+          let ID = 'radio-inner-' + i
+          document.getElementById(ID).style.backgroundColor = "white";
+        }
+        let ID = 'radio-inner-' + num
+        document.getElementById(ID).style.backgroundColor = "black";
         for (let i = 1; i <= 18; i++) {
           let id = "week-" + i;
           document.getElementById(id).style.border = "2px black solid";
