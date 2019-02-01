@@ -16,8 +16,18 @@ export default {
   },
   name: "schedule",
   data() {
-    return {};
-  }
+    return {
+    };
+  },
+  created () {
+    
+  },
+  mounted () {
+
+  },
+  methods: {
+
+  },
 };
 </script>
 

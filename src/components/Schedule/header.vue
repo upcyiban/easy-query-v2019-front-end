@@ -24,8 +24,8 @@
     </div>
   </div>
 </template>
-
 <script>
+import Bus from '../../assets/eventBus'
 export default {
   name: 'Header',
   data () {
@@ -42,11 +42,21 @@ export default {
       } else if (this.thisweek >= 18) {
         this.thisweek = 18
       }
+      Bus.$emit('thisweek', this.thisweek)
     }
-  }
+  },
+  mounted () {
+    this.thisweek = 2
+    this.thisday = 2
+    let today = {
+      thisweek: this.thisweek,
+      thisday: this.thisday
+    }
+    Bus.$emit('today', today)
+    Bus.$emit('thisweek', this.thisweek)
+  },
 }
 </script>
-
 <style scoped>
 .Header {
   width: 100%;
