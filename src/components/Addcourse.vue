@@ -5,17 +5,17 @@
     </div>
     <div class="form-container">
       <div class="form-frame" align="center">
-        <div class="class-name">
+        <div class="class-name" @click="EditInfo(0)">
           <div class="headerCol">课程名称</div>
           <div class="headerCol input-container">
-            <input type="text" placeholder="未填写">
+            <input type="text" placeholder="未填写" v-model="classname">
           </div>
         </div>
         <div class="class-infos">
           <div class="class-info" id="title-1" @click="EditInfo(1)">
             <div class="headerCol">{{titles[1]}}</div>
             <div class="headerCol input-container">
-              <input type="text" placeholder="未填写">
+              <input type="text" placeholder="未填写" v-model="classposition">
             </div>
           </div>
           <div class="class-info" id="title-2" @click="EditInfo(2)">
@@ -40,17 +40,18 @@
           <div class="class-info" id="title-3" @click="EditInfo(3)">
             <div class="headerCol">{{titles[3]}}</div>
             <div class="headerCol input-container">
-              <input type="text" placeholder="未填写">
+              <input type="text" placeholder="未填写" v-model="classtimes">
             </div>
           </div>
           <div class="class-info" id="title-4" @click="EditInfo(4)">
             <div class="headerCol">{{titles[4]}}</div>
             <div class="headerCol input-container">
-              <input type="text" placeholder="未填写">
+              <input type="text" placeholder="未填写" v-model="classteacher">
             </div>
           </div>
         </div>
       </div>
+      <div class="Tips">注：节数请按 ‘1020304’ 格式填写，其中第一位代表上课时间（周一至周日分别为1-7），后每两位为上课小节</div>
     </div>
   </div>
 </template>
@@ -61,12 +62,43 @@ export default {
   data() {
     return {
       titles: ["课程名称", "　　教室", "　　周数", "　　节数", "　　老师"],
-      radios: ["单周", "双周", "全选"]
+      radios: ["单周", "双周", "全选"],
+      radioNum: 0,
+      classname: '',
+      classweeks: '',
+      classposition: '',
+      classtimes: '',
+      classteacher: '',
+      studentid: '1707010229',
+      classgrade: '2018-2019-1'
     };
   },
   methods: {
     submit() {
-      console.log("点击了保存按钮");
+      console.log("点击了保存按钮")
+      for (let i = 1;i <= 18;i ++) {
+        let id = 'week-' + i
+        if (document.getElementById(id).style.borderColor == 'black') {
+          if (this.classweeks == '') {
+            this.classweeks += i
+          } else {
+            this.classweeks += (',' + i)
+          }
+        }
+      }
+      let url = 'http://yb.upc.edu.cn:8089/addCustomCourse'
+      let data = {
+        class_name: this.classname,
+        class_grade: this.classgrade,
+        class_teacher: this.classteacher,
+        class_position: this.classposition,
+        class_times: this.classtimes,
+        class_weeks: this.classweeks,
+        student_id: this.studentid
+      }
+      this.$axios.post(url, data).then(rsp => {
+        console.log(rsp)
+      })
     },
     selectweek(i) {
       let id = "week-" + i;
@@ -85,54 +117,43 @@ export default {
         document.getElementById(id).style.borderLeft = "1px grey solid";
         document.getElementById(id).style.width = "98%";
       }
-      let id = "title-" + item;
-      console.log(id);
-      document.getElementById(id).style.borderLeft = "7px black solid";
-      document.getElementById(id).style.width = "100%";
+      if (item != 0) {
+        let id = "title-" + item;
+        console.log(id);
+        document.getElementById(id).style.borderLeft = "7px black solid";
+        document.getElementById(id).style.width = "100%";
+      }
     },
     radio(num) {
-      if (num == 1) {
-        for (let i = 1;i <= 3;i ++) {
-          let ID = 'radio-inner-' + i
-          document.getElementById(ID).style.backgroundColor = "white";
-        }
-        let ID = 'radio-inner-' + num
+      for (let i = 1; i <= 3; i++) {
+        let ID = "radio-inner-" + i;
+        document.getElementById(ID).style.backgroundColor = "white";
+      }
+      if (num != this.radioNum) {
+        this.radioNum = num
+        let ID = "radio-inner-" + num;
         document.getElementById(ID).style.backgroundColor = "black";
-        for (let i = 1; i <= 18; i++) {
-          if (i % 2 == 1) {
+        if (num == 1 || num == 2) {
+          for (let i = 1; i <= 18; i++) {
+            if (i % 2 == num % 2) {
+              let id = "week-" + i;
+              document.getElementById(id).style.border = "2px black solid";
+            } else {
+              let id = "week-" + i;
+              document.getElementById(id).style.border = "2px white solid";
+            }
+          }
+        } else if (num == 3) {
+          for (let i = 1; i <= 18; i++) {
             let id = "week-" + i;
             document.getElementById(id).style.border = "2px black solid";
-          } else {
-            let id = "week-" + i;
-            document.getElementById(id).style.border = "none";
           }
         }
-      } else if (num == 2) {
-        for (let i = 1;i <= 3;i ++) {
-          let ID = 'radio-inner-' + i
-          document.getElementById(ID).style.backgroundColor = "white";
-        }
-        let ID = 'radio-inner-' + num
-        document.getElementById(ID).style.backgroundColor = "black";
-        for (let i = 1; i <= 18; i++) {
-          if (i % 2 == 0) {
-            let id = "week-" + i;
-            document.getElementById(id).style.border = "2px black solid";
-          } else {
-            let id = "week-" + i;
-            document.getElementById(id).style.border = "none";
-          }
-        }
-      } else if (num == 3) {
-        for (let i = 1;i <= 3;i ++) {
-          let ID = 'radio-inner-' + i
-          document.getElementById(ID).style.backgroundColor = "white";
-        }
-        let ID = 'radio-inner-' + num
-        document.getElementById(ID).style.backgroundColor = "black";
+      } else if (num == this.radioNum) {
+        this.radioNum = 0
         for (let i = 1; i <= 18; i++) {
           let id = "week-" + i;
-          document.getElementById(id).style.border = "2px black solid";
+          document.getElementById(id).style.border = "2px white solid";
         }
       }
     }

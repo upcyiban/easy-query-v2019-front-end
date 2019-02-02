@@ -25,4 +25,5 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 ## 注意事项
 ``` bash
 已使用webpack的proxytable跨域设置,可使用手机连接局域网方便调试
+接口使用axios请求
 ```
