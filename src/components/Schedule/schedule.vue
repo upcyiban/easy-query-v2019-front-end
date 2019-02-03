@@ -15,6 +15,7 @@
             class="classinfo-container"
             :id="i + '-' + j"
             v-html="classInfos[i-1][j][0]"
+            @click="passClassInfo(i-1, j)"
           ></div>
         </div>
       </div>
@@ -139,6 +140,7 @@ export default {
                       this.$set(_this.classInfos[weektime][n], 1, 1);
                     }
                     this.$set(_this.classInfos[weektime][n], 0, classinfo);
+                    this.$set(_this.classInfos[weektime][n], 2, i);
                   }
                 }
               }
@@ -220,6 +222,14 @@ export default {
           document.getElementById(bodyid).style.backgroundColor =
             "rgb(242, 242, 242)";
         }
+      }
+    },
+    passClassInfo (i, j) {
+      var InfoId = this.classInfos[i][j][2]
+      var Info = this.coursesOfThisWeek[InfoId]
+      if (Info != undefined) {
+        console.log('可以传')
+        this.$emit('classinfo', Info)
       }
     }
   },
@@ -326,5 +336,10 @@ export default {
   height: 8.3%;
   font-size: 0.8rem;
   overflow: hidden;
+}
+@media screen and (max-width: 376px) {
+  .classinfo-container {
+    font-size: 0.6rem;
+  }
 }
 </style>

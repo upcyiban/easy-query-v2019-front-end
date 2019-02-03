@@ -60,9 +60,10 @@ export default {
 <style scoped>
 .Header {
   width: 100%;
+  height: 10%
 }
 .time-container {
-  height: 3rem;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: row;

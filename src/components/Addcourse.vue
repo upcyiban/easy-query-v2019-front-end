@@ -53,6 +53,16 @@
       </div>
       <div class="Tips">注：节数请按 ‘1020304’ 格式填写，其中第一位代表上课时间（周一至周日分别为1-7），后每两位为上课小节</div>
     </div>
+    <div class="alert-container" v-show="ifsubmit">
+      <div class="alert-body">
+        {{submitinfo}}
+      </div>
+      <div class="alert-buttons">
+        <button @click="continueAdd">继续添加</button>
+        <button @click="$router.push('/schedule')">返回课表</button>
+      </div>
+    </div>
+    <div class="overmain"  v-show="ifsubmit" @click="continueAdd"></div>
   </div>
 </template>
 
@@ -70,7 +80,9 @@ export default {
       classtimes: '',
       classteacher: '',
       studentid: '1707010229',
-      classgrade: '2018-2019-1'
+      classgrade: '2018-2019-1',
+      ifsubmit: false,
+      submitinfo: ''
     };
   },
   methods: {
@@ -98,6 +110,13 @@ export default {
       }
       this.$axios.post(url, data).then(rsp => {
         console.log(rsp)
+        if (rsp.data = 'success') {
+          this.ifsubmit = true
+          this.submitinfo = '添加成功！'
+        } else {
+          this.ifsubmit = true
+          this.submitinfo = '添加失败，请稍后重试！若无法解决请联系小易'
+        }
       })
     },
     selectweek(i) {
@@ -156,6 +175,9 @@ export default {
           document.getElementById(id).style.border = "2px white solid";
         }
       }
+    },
+    continueAdd () {
+      this.ifsubmit = false
     }
   },
   created() {
@@ -168,6 +190,7 @@ export default {
 .main-container {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 .submit-container {
   width: 100%;
@@ -185,6 +208,8 @@ export default {
 .form-container {
   width: 100%;
   height: 93%;
+  position: relative;
+  z-index: 3;
 }
 .form-frame {
   width: 80%;
@@ -285,6 +310,52 @@ export default {
   height: 0.5rem;
   border-radius: 50%;
   border: 1px grey solid;
+}
+.overmain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0.2;
+  z-index: 4;
+}
+.alert-container {
+  width: 60%;
+  height: 10rem;
+  position: absolute;
+  top: 30%;
+  left: 20%;
+  z-index: 5;
+  border: 1px grey solid;
+  border-radius: 7px;
+  background: lightgoldenrodyellow;
+}
+.alert-body {
+  width: 100%;
+  height: 70%;
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.alert-buttons {
+  width: 100%;
+  height: 30%;
+  border-top: 1px grey solid;
+  display: flex;
+  flex-direction: row;
+}
+.alert-buttons button {
+  width: 50%;
+  height: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 1.2rem;
+  border-right: 1px grey solid;
 }
 @media screen and (max-width: 376px) {
   .submit {
