@@ -34,8 +34,9 @@ export default {
       thisweek: null,
       thisday: null,
       today: {
-        thisweek: null,
-        thisday: null
+        thisweek: '',
+        thisday: '',
+        studygrade: ''
       },
       courses: null,
       customcourses: null,
@@ -250,13 +251,16 @@ export default {
       this.thisweek = msg
     })
     this.courses = new Array()
-    var courseNum = 0;
+  },
+  mounted () {
     let url = "/api/getSchedule"
+    var studentId = sessionStorage.getItem('studentId')
+    var studygrade = this.today.studygrade
     this.$axios
       .get(url, {
         params: {
-          studentid: "1707010229",
-          grade: "2018-2019-1"
+          studentid: studentId,
+          grade: studygrade
         }
       })
       .then(rsp => {

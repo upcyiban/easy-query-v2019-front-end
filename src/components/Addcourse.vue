@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import Bus from '../assets/eventBus'
 export default {
   name: "addcourse",
   data() {
@@ -79,14 +80,14 @@ export default {
       classposition: '',
       classtimes: '',
       classteacher: '',
-      studentid: '1707010229',
-      classgrade: '2018-2019-1',
+      studentid: '',
+      classgrade: '',
       ifsubmit: false,
       submitinfo: ''
     };
   },
   methods: {
-    submit() {
+    submit() { // 保存并提交到后端
       console.log("点击了保存按钮")
       for (let i = 1;i <= 18;i ++) {
         let id = 'week-' + i
@@ -119,7 +120,7 @@ export default {
         }
       })
     },
-    selectweek(i) {
+    selectweek(i) { //单选项
       let id = "week-" + i;
       if (
         document.getElementById(id).style.border == "none" ||
@@ -130,7 +131,7 @@ export default {
         document.getElementById(id).style.border = "none";
       }
     },
-    EditInfo(item) {
+    EditInfo(item) { //选择输入项
       for (let i = 1; i <= 4; i++) {
         let id = "title-" + i;
         document.getElementById(id).style.borderLeft = "1px grey solid";
@@ -143,7 +144,7 @@ export default {
         document.getElementById(id).style.width = "100%";
       }
     },
-    radio(num) {
+    radio(num) { //选择周数单选
       for (let i = 1; i <= 3; i++) {
         let ID = "radio-inner-" + i;
         document.getElementById(ID).style.backgroundColor = "white";
@@ -182,6 +183,10 @@ export default {
   },
   created() {
     document.title = "添加课程";
+    this.classgrade = sessionStorage.getItem('studygrade')
+    this.studentid = sessionStorage.getItem('studentId')
+  },
+  mounted () {
   }
 };
 </script>
@@ -190,7 +195,7 @@ export default {
 .main-container {
   width: 100%;
   height: 100%;
-  position: relative;
+  position: absolute;
 }
 .submit-container {
   width: 100%;

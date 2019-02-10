@@ -31,7 +31,8 @@ export default {
   data () {
     return {
       thisweek: 1,
-      thisday: 1
+      thisday: 1,
+      today: null
     }
   },
   methods: {
@@ -45,14 +46,42 @@ export default {
       Bus.$emit('thisweek', this.thisweek)
     }
   },
-  mounted () {
-    this.thisweek = 2
-    this.thisday = 2
-    let today = {
-      thisweek: this.thisweek,
-      thisday: this.thisday
+  created () {
+    var studygrade = ''
+    var nowDate = new Date()
+    console.log(nowDate)
+    var year = nowDate.getFullYear();
+    var month = nowDate.getMonth() + 1;
+    var day = nowDate.getDate();
+    var thisdate = year + '-' + month + '-' + day
+    console.log(year + '-' + month + '-' + day)
+    var startdate = ''
+    if (month < 2 || (month == 2 && day <= 15)) {   //第一学期
+      studygrade = '2018-2019-1'
+      startdate = '2018-9-3'
+    } else if ((month == 2 && day > 15) || (month > 2 && month < 6) || (month == 6 && day < 30)) {   //第二学期
+      studygrade = '2018-2019-2'
+      startdate = '2019-2-24'
+    } else if ((month == 6 && day >= 30) || (month == 7 && day <= 30)) {    //小学期
+      studygrade = '2018-2019-3'
+      startdate = '2019-6-30'
     }
-    Bus.$emit('today', today)
+    startdate = this.$getYearWeek(startdate)
+    thisdate = this.$getYearWeek(thisdate)
+    this.thisweek = thisdate - startdate + 1
+    if (this.thisweek < 0) {
+      this.thisweek = 1
+    }
+    this.thisday = new Array(7, 1, 2, 3, 4, 5, 6)[nowDate.getDay()];
+    this.today = {
+      thisweek: this.thisweek,
+      thisday: this.thisday,
+      studygrade: studygrade
+    }
+    sessionStorage.setItem('studygrade', studygrade)
+  },
+  mounted () {
+    Bus.$emit('today', this.today)
     Bus.$emit('thisweek', this.thisweek)
   },
 }

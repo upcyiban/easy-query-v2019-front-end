@@ -4,11 +4,11 @@
       <div class="header-container">E-Query</div>
       <div class="userinfo-container">
         <div class="user-head">
-          <img :src="headurl" alt>
+          <img :src="userInfo.avatar" alt>
         </div>
         <div class="welcome">
           <span>Hi</span>
-          <div>{{userId}}</div>
+          <div>{{userInfo.realname}}</div>
         </div>
       </div>
       <div class="function-menu">
@@ -38,6 +38,10 @@ export default {
     return {
       headurl: require("../assets/头像.png"),
       userId: "tan谭",
+      userInfo: {
+        realname: '',
+        avatar: ''
+      },
       menu: [
         {
           title: '查课表',
@@ -72,6 +76,37 @@ export default {
       setTimeout(()=>{
         this.$router.push(this.menu[num].link)
       },500);
+    }
+  },
+  created () {
+    var verify_request = this.$GetQueryString("verify_request")
+    var yb_uid = this.$GetQueryString("yb_uid")
+    sessionStorage.setItem("verify_request", verify_request)
+    console.log(verify_request)
+    var APPID = 'f41ab16a3604b2bc'
+    var CALLBACK = 'http://f.yiban.cn/iapp33017'
+    if (
+      verify_request == -1 ||
+      verify_request == "" ||
+      verify_request == null
+    ) {
+      window.location.href =
+        "https://openapi.yiban.cn/oauth/authorize?client_id=" +
+        APPID +
+        "&redirect_uri=" +
+        CALLBACK +
+        "&state=5050"
+    } else {
+      this.$axios.get("/api/getUserInfo", {
+        params: {
+          vq: verify_request
+        }
+      }).then(rsp => {
+        console.log(rsp)
+        this.userInfo = rsp.data
+        let studentId = rsp.data.studentid
+        sessionStorage.setItem('studentId', studentId)
+      });
     }
   }
 };

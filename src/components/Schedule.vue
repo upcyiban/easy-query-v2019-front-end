@@ -59,6 +59,7 @@ export default {
 .main-container {
   width: 100%;
   height: 100%;
+  overflow-x: hidden;
 }
 .alert-container {
   width: 70%;
