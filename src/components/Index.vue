@@ -36,8 +36,8 @@ export default {
   name: "index",
   data() {
     return {
-      headurl: require("../assets/头像.png"),
-      userId: "tan谭",
+      headurl: '',
+      userId: '',
       userInfo: {
         realname: '',
         avatar: ''

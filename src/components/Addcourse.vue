@@ -51,7 +51,7 @@
           </div>
         </div>
       </div>
-      <div class="Tips">注：节数请按 ‘1020304’ 格式填写，其中第一位代表上课时间（周一至周日分别为1-7），后每两位为上课小节</div>
+      <div class="Tips">注：节数请按 ‘10203’ 格式填写，其中第一位代表上课时间（周一至周日分别为1-7），后每两位为上课开始小节和结束小节</div>
     </div>
     <div class="alert-container" v-show="ifsubmit">
       <div class="alert-body">
@@ -83,7 +83,9 @@ export default {
       studentid: '',
       classgrade: '',
       ifsubmit: false,
-      submitinfo: ''
+      submitinfo: '',
+      iseditmode: false,
+      classid: null
     };
   },
   methods: {
@@ -108,6 +110,9 @@ export default {
         class_times: this.classtimes,
         class_weeks: this.classweeks,
         student_id: this.studentid
+      }
+      if (this.classid) {
+        data.append('id', this.classid)
       }
       this.$axios.post(url, data).then(rsp => {
         console.log(rsp)
@@ -185,6 +190,28 @@ export default {
     document.title = "添加课程";
     this.classgrade = sessionStorage.getItem('studygrade')
     this.studentid = sessionStorage.getItem('studentId')
+    let editclassinfo = sessionStorage.getItem('editclassinfo')
+    if (editclassinfo != '') {
+      let classinfo = JSON.parse(editclassinfo)
+      this.classname = classinfo.class_name
+      this.classteacher = classinfo.class_teacher
+      this.classposition = classinfo.class_position
+      this.classtimes = classinfo.class_times
+      this.classweeks = classinfo.class_weeks
+      this.classid = classinfo.id
+      var weektimes = this.classweeks.split(",")
+      console.log(weektimes)
+      setTimeout(()=>{
+        for (let i = 1;i <= 18;i++) {
+          let id = "week-" + i;
+          weektimes.forEach(element => {
+            if (element == i) {
+              document.getElementById(id).style.border = "2px black solid";
+            }
+          });
+        }
+      },20)
+    }
   },
   mounted () {
   }
@@ -335,7 +362,7 @@ export default {
   z-index: 5;
   border: 1px grey solid;
   border-radius: 7px;
-  background: lightgoldenrodyellow;
+  background: rgba(255, 255, 255, 0.9);
 }
 .alert-body {
   width: 100%;

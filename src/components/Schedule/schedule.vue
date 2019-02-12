@@ -1,7 +1,15 @@
 <template>
   <div class="Schedule">
     <div class="HeaderRow-container">
-      <div v-for="i in 7" :key="i" :id="'Header-' + (i-1)">{{HeaderRow[i-1]}}</div>
+      <div class="month">
+        <span>2</span>
+        月
+      </div>
+      <div v-for="i in 7" :key="i" :id="'Header-' + (i-1)" class="header-row">
+        {{HeaderRow[i-1]}}
+        <span v-html="getdate(i-1)">
+        </span>
+      </div>
     </div>
     <div class="class-container">
       <div class="HeaderCol-container">
@@ -33,6 +41,7 @@ export default {
       HeadRow: "",
       thisweek: null,
       thisday: null,
+      seasonstart: '',
       today: {
         thisweek: '',
         thisday: '',
@@ -45,12 +54,14 @@ export default {
       coursesOfThisWeek: [],
       schoolLength: 0,
       classcolor: [
-        "rgb(208, 230, 216)",
-        "rgb(168, 216, 185)",
-        "rgb(27, 129, 62)",
-        "rgb(92, 157, 114)",
-        "rgb(36, 147, 110)",
-        "rgb(54, 86, 60)"
+        "#DDE8EE",
+        "#FF7676",
+        "#FFD066",
+        "#89EEFF",
+        "#FFF95D",
+        "#B7EE4A",
+        "#8FCBFF",
+        "#B59CFF"
       ]
     };
   },
@@ -124,7 +135,7 @@ export default {
             Object.keys(this.coursesOfThisWeek).forEach(i => {
               var classinfo =
                 this.coursesOfThisWeek[i].class_name +
-                "<br>@<br>" +
+                "<br>@" +
                 this.coursesOfThisWeek[i].class_position;
               var weektime = this.coursesOfThisWeek[i].class_times;
               if (weektime != null) {
@@ -151,12 +162,26 @@ export default {
       });
     },
     FixStyle() {
+      // 表头部分
+      for (let i = 0; i < 7; i++) {
+        let headerid = "Header-" + i;
+        if (this.thisday % 7 == i && this.thisweek == this.today.thisweek) {
+          document.getElementById(headerid).style.backgroundColor = '#DDE8EE'
+        } else {
+          document.getElementById(headerid).style.backgroundColor = '#F4F8F9'
+        }
+        for (let j = 1;j <= 12;j++) { //重置小格高度
+          let bodyid = (i+1) + '-' + j
+          document.getElementById(bodyid).style.height = '8%'
+        }
+      }
+      // 课表部分
       var classNum = 0;
       for (let i = 0; i < 7; i++) {
         for (let j = 1; j <= 12; j++) {
           var id = i + 1 + "-" + j
           document.getElementById(id).style.backgroundColor = "" // 重置背景颜色
-          if (this.classInfos[i][j][0] != null) {
+          if (this.classInfos[i][j][0]) {
             var lastTime = 0
             for (let k = j; k <= 13; k++) {
               if (k <= 12 && this.classInfos[i][k][0] == this.classInfos[i][j][0]) {
@@ -166,8 +191,8 @@ export default {
                 this.classInfos[i][k] != this.classInfos[i][j] ||
                 k > 12
               ) {
-                let height = lastTime * 8.3;
-                let colorNum = (classNum % 5) + 1;
+                let height = lastTime * 8.2;
+                let colorNum = (classNum % 7) + 1;
                 document.getElementById(id).style.height = height + "%";
                 if (this.classInfos[i][j][1] == 0) {
                   document.getElementById(id).style.backgroundColor = this.classcolor[colorNum];
@@ -175,10 +200,6 @@ export default {
                   document.getElementById(id).style.backgroundColor = 'rgb(250, 220, 220)';
                 }
                 document.getElementById(id).style.borderRadius = "5px";
-                document.getElementById(id).style.borderLeft =
-                  "1px rgb(242, 242, 242) solid";
-                document.getElementById(id).style.borderTop =
-                  "1px rgb(242, 242, 242) solid";
                 for (let l = j + 1; l < k; l++) {
                   let Id = i + 1 + "-" + l;
                   document.getElementById(Id).style.height = "0%";
@@ -191,7 +212,7 @@ export default {
           }
         }
       }
-      if (this.thisweek == this.today.thisweek) {
+      /*if (this.thisweek == this.today.thisweek) { //调节宽度
         for (let i = 0; i < 7; i++) {
           let bodyid = "Row-" + i;
           let headerid = "Header-" + i;
@@ -223,15 +244,27 @@ export default {
           document.getElementById(bodyid).style.backgroundColor =
             "rgb(242, 242, 242)";
         }
-      }
+      }*/
     },
     passClassInfo (i, j) {
       var InfoId = this.classInfos[i][j][2]
-      var Info = this.coursesOfThisWeek[InfoId]
-      if (Info != undefined) {
+      var Info = {
+        classinfo: this.coursesOfThisWeek[InfoId],
+        iscustom: this.classInfos[i][j][1]
+      }
+      if (this.coursesOfThisWeek[InfoId] != undefined) {
         console.log('可以传')
+        console.log(this.coursesOfThisWeek[InfoId])
         this.$emit('classinfo', Info)
       }
+    },
+    getdate (days) {
+      var beginDateStr = this.seasonstart.replace(/-/g,"\/");
+      var beginDate = new Date(beginDateStr)
+      beginDate.setDate(beginDate.getDate() + (this.thisweek-1)*7 + days)
+      var endDateStr = (beginDate.getMonth()+1) + "-" + beginDate.getDate()
+      console.log(endDateStr)
+      return endDateStr
     }
   },
   created() {
@@ -249,6 +282,9 @@ export default {
     })
     Bus.$on("thisweek", msg => {
       this.thisweek = msg
+    })
+    Bus.$on("seasonstart", msg => {
+      this.seasonstart = msg
     })
     this.courses = new Array()
   },
@@ -287,20 +323,30 @@ export default {
   height: 100%;
 }
 .HeaderRow-container {
-  width: 95%;
+  width: 100%;
   height: 5%;
-  margin-left: 5%;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  background: #F4F8F9;
 }
 .HeaderRow-container div {
-  width: 14.2%;
+  width: 13.4%;
   height: 100%;
   font-size: 0.8rem;
+  border-radius: 5px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.month {
+  width: 5% !important;
+  height: 100%;
+  font-size: 0.7rem !important;
+}
+.header-row span {
+  font-size: 0.6rem;
 }
 .class-container {
   width: 100%;
@@ -320,26 +366,30 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  background: #F4F8F9;
 }
 .classes-container {
   width: 95%;
   height: 100%;
-  background-color: rgb(242, 242, 242);
+  background-color: white;
 }
 .row-container {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
 .col-container {
   display: flex;
   flex-direction: column;
-  width: 14.2%;
+  justify-content: space-between;
+  width: 13.7%;
 }
 .classinfo-container {
   width: 100%;
-  height: 8.3%;
+  height: 8%;
   font-size: 0.8rem;
   overflow: hidden;
+  color: #404040;
 }
 @media screen and (max-width: 376px) {
   .classinfo-container {

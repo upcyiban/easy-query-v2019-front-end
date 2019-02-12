@@ -7,7 +7,7 @@
         </div>
         <div class="week-time">
           <div>第{{thisweek}}周</div>
-          <span>大三第一学期</span>
+          <span>大{{grade}}第{{season}}学期</span>
         </div>
         <div class="week-controller" @click="weekcontroller(1)">
           <i class="fa fa-chevron-right" aria-hidden="true"></i>
@@ -32,7 +32,11 @@ export default {
     return {
       thisweek: 1,
       thisday: 1,
-      today: null
+      today: null,
+      seasonstart: null,
+      grade: '',
+      season: '',
+      grades: ['一', '二', '三', '四', '五']
     }
   },
   methods: {
@@ -47,6 +51,9 @@ export default {
     }
   },
   created () {
+    var studentId = sessionStorage.getItem('studentId')
+    var studentgrade = parseInt(studentId.substr(0,2))
+    console.log(studentgrade)
     var studygrade = ''
     var nowDate = new Date()
     console.log(nowDate)
@@ -56,16 +63,29 @@ export default {
     var thisdate = year + '-' + month + '-' + day
     console.log(year + '-' + month + '-' + day)
     var startdate = ''
-    if (month < 2 || (month == 2 && day <= 15)) {   //第一学期
+    if (month < 2 || (month == 2 && day <= 15) || (month >= 8)) {   //第一学期
       studygrade = '2018-2019-1'
       startdate = '2018-9-3'
+      if (month >= 8) {
+        this.grade = this.grades[year - 2000 - studentgrade]
+        console.log(this.grade)
+      } else {
+        this.grade = this.grades[year - 2000 - studentgrade - 1]
+        console.log(this.grade)
+      }
+      this.season = '一'
     } else if ((month == 2 && day > 15) || (month > 2 && month < 6) || (month == 6 && day < 30)) {   //第二学期
       studygrade = '2018-2019-2'
       startdate = '2019-2-24'
+      this.grade = this.grades[year - 2000 - studentgrade - 1]
+      this.season = '二'
     } else if ((month == 6 && day >= 30) || (month == 7 && day <= 30)) {    //小学期
       studygrade = '2018-2019-3'
       startdate = '2019-6-30'
+      this.grade = this.grades[year - 2000 - studentgrade - 1]
+      this.season = '三'
     }
+    this.seasonstart = startdate
     startdate = this.$getYearWeek(startdate)
     thisdate = this.$getYearWeek(thisdate)
     this.thisweek = thisdate - startdate + 1
@@ -83,13 +103,14 @@ export default {
   mounted () {
     Bus.$emit('today', this.today)
     Bus.$emit('thisweek', this.thisweek)
+    Bus.$emit('seasonstart', this.seasonstart)
   },
 }
 </script>
 <style scoped>
 .Header {
   width: 100%;
-  height: 10%
+  height: 8%
 }
 .time-container {
   height: 100%;
@@ -111,6 +132,7 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  font-size: 1.6rem;
 }
 .week-time {
   width: 60%;
