@@ -91,6 +91,7 @@ export default {
   methods: {
     submit() { // 保存并提交到后端
       console.log("点击了保存按钮")
+      this.classweeks = ''
       for (let i = 1;i <= 18;i ++) {
         let id = 'week-' + i
         if (document.getElementById(id).style.borderColor == 'black') {
@@ -112,7 +113,7 @@ export default {
         student_id: this.studentid
       }
       if (this.classid) {
-        data.append('id', this.classid)
+        data.id = this.classid
       }
       this.$axios.post(url, data).then(rsp => {
         console.log(rsp)
@@ -191,7 +192,7 @@ export default {
     this.classgrade = sessionStorage.getItem('studygrade')
     this.studentid = sessionStorage.getItem('studentId')
     let editclassinfo = sessionStorage.getItem('editclassinfo')
-    if (editclassinfo != '') {
+    if (editclassinfo) {
       let classinfo = JSON.parse(editclassinfo)
       this.classname = classinfo.class_name
       this.classteacher = classinfo.class_teacher

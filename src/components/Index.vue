@@ -106,9 +106,9 @@ export default {
         this.userInfo = rsp.data
         let studentId = rsp.data.studentid
         sessionStorage.setItem('studentId', studentId)
-      });
+      })
     }
-  }
+  },
 };
 </script>
 

@@ -63,7 +63,7 @@ export default {
     var thisdate = year + '-' + month + '-' + day
     console.log(year + '-' + month + '-' + day)
     var startdate = ''
-    if (month < 2 || (month == 2 && day <= 15) || (month >= 8)) {   //第一学期
+    if (month < 2 || (month == 2 && day <= 17) || (month >= 8)) {   //第一学期
       studygrade = '2018-2019-1'
       startdate = '2018-9-3'
       if (month >= 8) {

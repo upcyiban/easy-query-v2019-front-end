@@ -386,7 +386,7 @@ export default {
 }
 .classinfo-container {
   width: 100%;
-  height: 8%;
+  height: 8.2%;
   font-size: 0.8rem;
   overflow: hidden;
   color: #404040;

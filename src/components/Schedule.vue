@@ -34,7 +34,7 @@
             </button>
           </div>
           <div>
-            <button>
+            <button @click="deleteCustomClass">
               删除
             </button>
           </div>
@@ -63,7 +63,8 @@ export default {
         class_position: '',
         class_weeks: '',
         class_times: '',
-        class_teacher: ''
+        class_teacher: '',
+        id: -1
       },
       classheader: ['教室', '周数', '节数', '老师'],
       iscustom: false
@@ -93,6 +94,16 @@ export default {
       let str = JSON.stringify(obj)
       sessionStorage.setItem('editclassinfo', str)
       this.$router.push('/schedule/addcourse')
+    },
+    deleteCustomClass () {
+      let url = 'http://yb.upc.edu.cn:8089/deleteCustomCourse'
+      let data = {
+        id: this.classinfo.id
+      }
+      console.log(this.classinfo.id)
+      this.$axios.post(url, data).then(rsp => {
+        console.log(rsp)
+      })
     }
   },
   watch: {
