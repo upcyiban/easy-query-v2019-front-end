@@ -59,13 +59,19 @@ export default {
     console.log(nowDate)
     var year = nowDate.getFullYear();
     var month = nowDate.getMonth() + 1;
+    if (month < 10) {
+      month = '0' + month
+    }
     var day = nowDate.getDate();
+    if (day < 10) {
+      day = '0' + day
+    }
     var thisdate = year + '-' + month + '-' + day
     console.log(year + '-' + month + '-' + day)
     var startdate = ''
     if (month < 2 || (month == 2 && day <= 17) || (month >= 8)) {   //第一学期
       studygrade = '2018-2019-1'
-      startdate = '2018-9-3'
+      startdate = '2018-09-3'
       if (month >= 8) {
         this.grade = this.grades[year - 2000 - studentgrade]
         console.log(this.grade)
@@ -76,18 +82,21 @@ export default {
       this.season = '一'
     } else if ((month == 2 && day > 15) || (month > 2 && month < 6) || (month == 6 && day < 30)) {   //第二学期
       studygrade = '2018-2019-2'
-      startdate = '2019-2-24'
+      startdate = '2019-02-24'
       this.grade = this.grades[year - 2000 - studentgrade - 1]
       this.season = '二'
     } else if ((month == 6 && day >= 30) || (month == 7 && day <= 30)) {    //小学期
       studygrade = '2018-2019-3'
-      startdate = '2019-6-30'
+      startdate = '2019-06-30'
       this.grade = this.grades[year - 2000 - studentgrade - 1]
       this.season = '三'
     }
     this.seasonstart = startdate
+    console.log(startdate)
     startdate = this.$getYearWeek(startdate)
+    console.log(startdate)
     thisdate = this.$getYearWeek(thisdate)
+    console.log(thisdate)
     this.thisweek = thisdate - startdate + 1
     if (this.thisweek < 0) {
       this.thisweek = 1

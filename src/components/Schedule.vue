@@ -103,6 +103,10 @@ export default {
       console.log(this.classinfo.id)
       this.$axios.post(url, data).then(rsp => {
         console.log(rsp)
+        if (rsp.data.result == 'success') {
+          alert('删除课程成功！')
+          this.closeAlert()
+        }
       })
     }
   },
@@ -163,8 +167,8 @@ export default {
 }
 .classinfo-container {
   height: 65%;
-  width: 70%;
-  margin-left: 15%;
+  width: 75%;
+  margin-left: 12.5%;
 }
 .class-name {
   min-height: 15%;
@@ -173,7 +177,7 @@ export default {
   text-align: center;
 }
 .class-info {
-  width: 65%;
+  width: 75%;
   height: 35%;
   display: flex;
   flex-direction: row;
@@ -193,12 +197,16 @@ export default {
   justify-content: space-between;
 }
 .class-content {
-  width: 45%;
+  width: 50%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
+}
+.class-content div {
+  width: 100%;
+  height: 25%;
 }
 .alert-buttons {
   width: 100%;

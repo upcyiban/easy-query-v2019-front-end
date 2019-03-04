@@ -13,7 +13,7 @@
       </div>
       <div class="function-menu">
         <div class="button-menu">
-          <div class="function-button" v-for="i in 3" :key="i" @click="ToNextPage(i-1)">
+          <div class="function-button" v-for="i in 2" :key="i" @click="ToNextPage(i-1)">
             <div class="button-icon" :class="menu[i-1].bindclass" :style="{opacity : 0.2 + i*2/10}">
               <i class="fa fa-chevron-right fa-lg" aria-hidden="true"></i>
             </div>
@@ -76,20 +76,48 @@ export default {
       setTimeout(()=>{
         this.$router.push(this.menu[num].link)
       },500);
+    },
+    GetQueryString (name) {  //  截取VQ
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) return unescape(r[2]);
+      return null;
+    },
+    getQueryVariable (variable) {
+      console.log(window.location)
+      var query = window.location.hash.substring(3);
+      var vars = query.split("&");
+      for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+        if(pair[0] == variable){return pair[1];}
+      }
+      return(null);
     }
   },
-  created () {
-    var verify_request = this.$GetQueryString("verify_request")
-    var yb_uid = this.$GetQueryString("yb_uid")
-    sessionStorage.setItem("verify_request", verify_request)
+  mounted () {
+    var verify_request = this.getQueryVariable("verify_request")
+    var yb_uid = this.getQueryVariable("yb_uid")
     console.log(verify_request)
+    console.log(localStorage.getItem("verify_request"))
+    if (localStorage.getItem("verify_request") != null) {
+      console.log(2323)
+      verify_request = localStorage.getItem("verify_request")
+      yb_uid = localStorage.getItem("yb_uid")
+      if (this.getQueryVariable("verify_request")) {
+        this.$router.push('/')
+      }
+    }
+    localStorage.setItem("verify_request", verify_request)
+    localStorage.setItem("yb_uid", yb_uid)
+    console.log(localStorage.getItem("verify_request"))
     var APPID = 'f41ab16a3604b2bc'
     var CALLBACK = 'http://f.yiban.cn/iapp33017'
     if (
       verify_request == -1 ||
-      verify_request == "" ||
-      verify_request == null
+      verify_request === "" ||
+      verify_request === null
     ) {
+      
       window.location.href =
         "https://openapi.yiban.cn/oauth/authorize?client_id=" +
         APPID +
@@ -97,16 +125,26 @@ export default {
         CALLBACK +
         "&state=5050"
     } else {
-      this.$axios.get("/api/getUserInfo", {
+      this.$axios.get("http://yb.upc.edu.cn:8089/getUserInfo", {
         params: {
           vq: verify_request
         }
       }).then(rsp => {
-        console.log(rsp)
-        this.userInfo = rsp.data
-        let studentId = rsp.data.studentid
-        sessionStorage.setItem('studentId', studentId)
+        if (rsp.data.code == -1) {
+          window.location.href =
+            "https://openapi.yiban.cn/oauth/authorize?client_id=" +
+            APPID +
+            "&redirect_uri=" +
+            CALLBACK +
+            "&state=5050"
+        } else {
+          console.log(rsp)
+          this.userInfo = rsp.data
+          let studentId = rsp.data.studentid
+          sessionStorage.setItem('studentId', studentId)
+        }
       })
+      
     }
   },
 };
@@ -179,30 +217,34 @@ export default {
 }
 .button-menu {
   width: 50%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 .function-button {
-  height: 2.4rem;
+  height: auto;
+  margin-top: 1.8rem;
   display: flex;
   flex-direction: row;
   align-items: center;
+  
 }
 .button-icon {
-  height: 1.2rem;
-  width: 1.2rem;
+  height: 1.4rem;
+  width: 1.4rem;
   border: 2px black solid;
   border-radius: 50%;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  font-size: 0.4rem;
+  font-size: 1rem;
 }
 .button-icon i {
-  width: 30%;
-  height: 30%;
+  width: 40%;
+  height: 45%;
+  font-size: 1rem;
 }
 .button-title {
   height: 2rem;

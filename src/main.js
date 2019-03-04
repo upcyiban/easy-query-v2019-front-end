@@ -30,18 +30,20 @@ Vue.prototype.$getYearWeek = function (dateString) {  //  转换日期为周数
   var da =dateString;//日期格式2015-12-30
   var date1 = new Date(da.substring(0,4), parseInt(da.substring(5,7)) - 1, da.substring(8,10));
   var date2 = new Date(da.substring(0,4), 0, 1);
-  var dateWeekNum=date2.getDay()-1;
-  if(dateWeekNum<0){dateWeekNum=6;}
-  if(dateWeekNum<4){
+  var dateWeekNum=date2.getDay(); //以周日为第一天
+  if (dateWeekNum<0) {
+    dateWeekNum=6;
+  }
+  if (dateWeekNum<4) {
       date2.setDate(date2.getDate()-dateWeekNum);
-  }else{
+  } else {
       date2.setDate(date2.getDate()+7-dateWeekNum);
   }
   var d = Math.round((date1.valueOf() - date2.valueOf()) / 86400000);
-  if(d<0){
+  if (d<0) {
       var date3 = (date1.getFullYear()-1)+"-12-31";
       return getYearWeek(date3);
-  }else{
+  } else {
       var year=date1.getFullYear();
       var week=Math.ceil((d+1 )/ 7);
       return week;

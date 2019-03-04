@@ -190,8 +190,8 @@ export default {
               } else if (
                 this.classInfos[i][k] != this.classInfos[i][j] ||
                 k > 12
-              ) {
-                let height = lastTime * 8.2;
+              ) {  //修复高度
+                let height = lastTime * 8.1 + (lastTime - 3) * 0.255;
                 let colorNum = (classNum % 7) + 1;
                 document.getElementById(id).style.height = height + "%";
                 if (this.classInfos[i][j][1] == 0) {
@@ -289,7 +289,7 @@ export default {
     this.courses = new Array()
   },
   mounted () {
-    let url = "/api/getSchedule"
+    let url = "http://yb.upc.edu.cn:8089/getSchedule"
     var studentId = sessionStorage.getItem('studentId')
     var studygrade = this.today.studygrade
     this.$axios
@@ -382,11 +382,11 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 13.7%;
+  width: 13.4%;
 }
 .classinfo-container {
   width: 100%;
-  height: 8.2%;
+  height: 8.1%;
   font-size: 0.8rem;
   overflow: hidden;
   color: #404040;

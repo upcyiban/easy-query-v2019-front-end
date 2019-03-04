@@ -8,14 +8,14 @@
         <div class="class-name" @click="EditInfo(0)">
           <div class="headerCol">课程名称</div>
           <div class="headerCol input-container">
-            <input type="text" placeholder="未填写" v-model="classname">
+            <input type="text" placeholder="未填写" v-model="classname" maxlength="10">
           </div>
         </div>
         <div class="class-infos">
           <div class="class-info" id="title-1" @click="EditInfo(1)">
             <div class="headerCol">{{titles[1]}}</div>
             <div class="headerCol input-container">
-              <input type="text" placeholder="未填写" v-model="classposition">
+              <input type="text" placeholder="未填写" v-model="classposition"  maxlength="8">
             </div>
           </div>
           <div class="class-info" id="title-2" @click="EditInfo(2)">
@@ -40,18 +40,18 @@
           <div class="class-info" id="title-3" @click="EditInfo(3)">
             <div class="headerCol">{{titles[3]}}</div>
             <div class="headerCol input-container">
-              <input type="text" placeholder="未填写" v-model="classtimes">
+              <input type="text" placeholder="未填写" v-model="classtimes"  maxlength="5">
             </div>
           </div>
           <div class="class-info" id="title-4" @click="EditInfo(4)">
             <div class="headerCol">{{titles[4]}}</div>
             <div class="headerCol input-container">
-              <input type="text" placeholder="未填写" v-model="classteacher">
+              <input type="text" placeholder="未填写" v-model="classteacher"  maxlength="6">
             </div>
           </div>
         </div>
       </div>
-      <div class="Tips">注：节数请按 ‘10203’ 格式填写，其中第一位代表上课时间（周一至周日分别为1-7），后每两位为上课开始小节和结束小节</div>
+      <div class="Tips">注：节数请按 “10203” 格式填写，其中第一位代表上课时间（周一至周日分别为1-7），后每两位为上课开始小节和结束小节</div>
     </div>
     <div class="alert-container" v-show="ifsubmit">
       <div class="alert-body">
@@ -59,7 +59,7 @@
       </div>
       <div class="alert-buttons">
         <button @click="continueAdd">继续添加</button>
-        <button @click="$router.push('/schedule')">返回课表</button>
+        <button @click="$router.push('/schedule')" v-show="isNotSubmit" style="border-left: 1px grey solid;">返回课表</button>
       </div>
     </div>
     <div class="overmain"  v-show="ifsubmit" @click="continueAdd"></div>
@@ -85,7 +85,8 @@ export default {
       ifsubmit: false,
       submitinfo: '',
       iseditmode: false,
-      classid: null
+      classid: null,
+      isNotSubmit: true
     };
   },
   methods: {
@@ -102,29 +103,37 @@ export default {
           }
         }
       }
-      let url = 'http://yb.upc.edu.cn:8089/addCustomCourse'
-      let data = {
-        class_name: this.classname,
-        class_grade: this.classgrade,
-        class_teacher: this.classteacher,
-        class_position: this.classposition,
-        class_times: this.classtimes,
-        class_weeks: this.classweeks,
-        student_id: this.studentid
-      }
-      if (this.classid) {
-        data.id = this.classid
-      }
-      this.$axios.post(url, data).then(rsp => {
-        console.log(rsp)
-        if (rsp.data = 'success') {
-          this.ifsubmit = true
-          this.submitinfo = '添加成功！'
-        } else {
-          this.ifsubmit = true
-          this.submitinfo = '添加失败，请稍后重试！若无法解决请联系小易'
+      if (this.classname && this.classposition && this.classtimes && this.classweeks) {
+        let url = 'http://yb.upc.edu.cn:8089/addCustomCourse'
+        let data = {
+          class_name: this.classname,
+          class_grade: this.classgrade,
+          class_teacher: this.classteacher,
+          class_position: this.classposition,
+          class_times: this.classtimes,
+          class_weeks: this.classweeks,
+          student_id: this.studentid
         }
-      })
+        if (this.classid) {
+          data.id = this.classid
+        }
+        this.$axios.post(url, data).then(rsp => {
+          console.log(rsp)
+          if (rsp.data = 'success') {
+            this.ifsubmit = true
+            this.isNotSubmit = true
+            this.submitinfo = '添加成功！'
+          }
+        }).catch(rsp => {
+          this.ifsubmit = true
+          this.isNotSubmit = true
+          this.submitinfo = '添加失败，请稍后重试！若无法解决请联系小易'
+        })
+      } else {
+        this.ifsubmit = true
+        this.isNotSubmit = false
+        this.submitinfo = '请检查课程名称和时间地点是否有未填项！'
+      }
     },
     selectweek(i) { //单选项
       let id = "week-" + i;
@@ -185,6 +194,7 @@ export default {
     },
     continueAdd () {
       this.ifsubmit = false
+      this.classid = null
     }
   },
   created() {
@@ -230,10 +240,10 @@ export default {
   height: 7%;
 }
 .submit {
-  width: 15%;
+  width: 20%;
   height: 100%;
   font-size: 1.2rem;
-  margin-left: 83%;
+  margin-left: 80%;
   background: none;
   outline: none;
   border: none;
@@ -344,6 +354,10 @@ export default {
   border-radius: 50%;
   border: 1px grey solid;
 }
+.Tips {
+  width: 80%;
+  margin-left: 10%;
+}
 .overmain {
   position: absolute;
   top: 0;
@@ -366,7 +380,8 @@ export default {
   background: rgba(255, 255, 255, 0.9);
 }
 .alert-body {
-  width: 100%;
+  width: 80%;
+  padding: 0 10% 0 10%;
   height: 70%;
   font-size: 1.2rem;
   display: flex;
@@ -380,6 +395,7 @@ export default {
   border-top: 1px grey solid;
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 .alert-buttons button {
   width: 50%;
@@ -388,7 +404,6 @@ export default {
   border: none;
   outline: none;
   font-size: 1.2rem;
-  border-right: 1px grey solid;
 }
 @media screen and (max-width: 376px) {
   .submit {
