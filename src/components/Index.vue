@@ -77,12 +77,6 @@ export default {
         this.$router.push(this.menu[num].link)
       },500);
     },
-    GetQueryString (name) {  //  截取VQ
-      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-      var r = window.location.search.substr(1).match(reg);
-      if (r != null) return unescape(r[2]);
-      return null;
-    },
     getQueryVariable (variable) {
       console.log(window.location)
       var query = window.location.hash.substring(3);
@@ -95,57 +89,57 @@ export default {
     }
   },
   mounted () {
-    var verify_request = this.getQueryVariable("verify_request")
-    var yb_uid = this.getQueryVariable("yb_uid")
-    console.log(verify_request)
-    console.log(localStorage.getItem("verify_request"))
-    if (localStorage.getItem("verify_request") != null) {
+    var verify_request = ''
+    var yb_uid = ''
+    if (localStorage.getItem("verify_request")) {
       console.log(2323)
       verify_request = localStorage.getItem("verify_request")
       yb_uid = localStorage.getItem("yb_uid")
       if (this.getQueryVariable("verify_request")) {
         this.$router.push('/')
       }
-    }
-    localStorage.setItem("verify_request", verify_request)
-    localStorage.setItem("yb_uid", yb_uid)
-    console.log(localStorage.getItem("verify_request"))
-    var APPID = 'f41ab16a3604b2bc'
-    var CALLBACK = 'http://f.yiban.cn/iapp33017'
-    if (
-      verify_request == -1 ||
-      verify_request === "" ||
-      verify_request === null
-    ) {
-      
-      window.location.href =
-        "https://openapi.yiban.cn/oauth/authorize?client_id=" +
-        APPID +
-        "&redirect_uri=" +
-        CALLBACK +
-        "&state=5050"
     } else {
-      this.$axios.get("http://yb.upc.edu.cn:8089/getUserInfo", {
-        params: {
-          vq: verify_request
-        }
-      }).then(rsp => {
-        if (rsp.data.code == -1) {
+      if (this.getQueryVariable("verify_request")) {
+        localStorage.setItem('verify_request', this.getQueryVariable("verify_request"))
+        localStorage.setItem('yb_uid', this.getQueryVariable("yb_uid"))
+        this.$router.push('/')
+      } else {
+        var APPID = 'f41ab16a3604b2bc'
+        var CALLBACK = 'http://f.yiban.cn/iapp33017'
+        if (
+          verify_request == -1 ||
+          verify_request === "" ||
+          verify_request === null
+        ) {
           window.location.href =
             "https://openapi.yiban.cn/oauth/authorize?client_id=" +
             APPID +
             "&redirect_uri=" +
             CALLBACK +
             "&state=5050"
-        } else {
-          console.log(rsp)
-          this.userInfo = rsp.data
-          let studentId = rsp.data.studentid
-          sessionStorage.setItem('studentId', studentId)
         }
-      })
-      
+      }
     }
+    console.log(verify_request)
+    this.$axios.get("http://yb.upc.edu.cn:8089/getUserInfo", {
+      params: {
+        vq: verify_request
+      }
+    }).then(rsp => {
+      if (rsp.data.code == -1) {
+        window.location.href =
+          "https://openapi.yiban.cn/oauth/authorize?client_id=" +
+          APPID +
+          "&redirect_uri=" +
+          CALLBACK +
+          "&state=5050"
+      } else {
+        console.log(rsp)
+        this.userInfo = rsp.data
+        let studentId = rsp.data.studentid
+        sessionStorage.setItem('studentId', studentId)
+      }
+    })
   },
 };
 </script>

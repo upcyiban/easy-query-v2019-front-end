@@ -207,6 +207,10 @@ export default {
 .class-content div {
   width: 100%;
   height: 25%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 .alert-buttons {
   width: 100%;

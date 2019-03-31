@@ -83,51 +83,53 @@ export default {
         }
       }
       Object.keys(this.courses).forEach(originNum => {
-        var str = this.courses[originNum].class_weeks;
-        if (originNum == this.schoolLength) {
-          this.schoolLength = courseNum
-          console.log(this.schoolLength)
-        }
-        if (str.indexOf("-") != -1) {
-          if (str.indexOf(",") != -1) {
-            // '1-3,'
+        if (this.courses[originNum].class_name.indexOf('免听') == -1) {
+          var str = this.courses[originNum].class_weeks;
+          if (originNum == this.schoolLength) {
+            this.schoolLength = courseNum
+            console.log(this.schoolLength)
+          }
+          if (str.indexOf("-") != -1) {
+            if (str.indexOf(",") != -1) {
+              // '1-3,'
+              let strs = str.split(/[,]/);
+              Object.keys(strs).forEach(key => {
+                if (strs[key].indexOf("-") != -1) {
+                  // '1-3'
+                  let strings = strs[key].split(/[-]/);
+                  if (
+                    strings[0] <= this.thisweek &&
+                    this.thisweek <= strings[1]
+                  ) {
+                    this.coursesOfThisWeek[courseNum] = this.courses[originNum];
+                    courseNum++;
+                  }
+                } else {
+                  // '3'
+                  if (strs[key] == this.thisweek) {
+                    this.coursesOfThisWeek[courseNum] = this.courses[originNum];
+                    courseNum++;
+                  }
+                }
+              });
+            } else {
+              // '1-3'
+              let strs = str.split(/[-]/);
+              if (strs[0] <= this.thisweek && this.thisweek <= strs[1]) {
+                this.coursesOfThisWeek[courseNum] = this.courses[originNum];
+                courseNum++;
+              }
+            }
+          } else {
+            // '1,2,3,4','2'
             let strs = str.split(/[,]/);
-            Object.keys(strs).forEach(key => {
-              if (strs[key].indexOf("-") != -1) {
-                // '1-3'
-                let strings = strs[key].split(/[-]/);
-                if (
-                  strings[0] <= this.thisweek &&
-                  this.thisweek <= strings[1]
-                ) {
-                  this.coursesOfThisWeek[courseNum] = this.courses[originNum];
-                  courseNum++;
-                }
-              } else {
-                // '3'
-                if (strs[key] == this.thisweek) {
-                  this.coursesOfThisWeek[courseNum] = this.courses[originNum];
-                  courseNum++;
-                }
+            Object.keys(strs).forEach(i => {
+              if (strs[i] == this.thisweek) {
+                this.coursesOfThisWeek[courseNum] = this.courses[originNum];
+                courseNum++;
               }
             });
-          } else {
-            // '1-3'
-            let strs = str.split(/[-]/);
-            if (strs[0] <= this.thisweek && this.thisweek <= strs[1]) {
-              this.coursesOfThisWeek[courseNum] = this.courses[originNum];
-              courseNum++;
-            }
           }
-        } else {
-          // '1,2,3,4','2'
-          let strs = str.split(/[,]/);
-          Object.keys(strs).forEach(i => {
-            if (strs[i] == this.thisweek) {
-              this.coursesOfThisWeek[courseNum] = this.courses[originNum];
-              courseNum++;
-            }
-          });
         }
         if (this.courses.length) {
           //  筛选本周课程
