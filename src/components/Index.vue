@@ -91,6 +91,8 @@ export default {
   mounted () {
     var verify_request = ''
     var yb_uid = ''
+    var APPID = 'f41ab16a3604b2bc'
+    var CALLBACK = 'http://f.yiban.cn/iapp33017'
     if (localStorage.getItem("verify_request")) {
       console.log(2323)
       verify_request = localStorage.getItem("verify_request")
@@ -104,8 +106,6 @@ export default {
         localStorage.setItem('yb_uid', this.getQueryVariable("yb_uid"))
         this.$router.push('/')
       } else {
-        var APPID = 'f41ab16a3604b2bc'
-        var CALLBACK = 'http://f.yiban.cn/iapp33017'
         if (
           verify_request == -1 ||
           verify_request === "" ||
