@@ -101,14 +101,18 @@ export default {
                     strings[0] <= this.thisweek &&
                     this.thisweek <= strings[1]
                   ) {
-                    this.coursesOfThisWeek[courseNum] = this.courses[originNum];
-                    courseNum++;
+                    if ((this.courses[originNum].single > 0 && this.thisweek % 2 == this.courses[originNum].single % 2) || this.courses[originNum].single == 0) { //判断单双周
+                      this.coursesOfThisWeek[courseNum] = this.courses[originNum];
+                      courseNum++;
+                    }
                   }
                 } else {
                   // '3'
                   if (strs[key] == this.thisweek) {
-                    this.coursesOfThisWeek[courseNum] = this.courses[originNum];
-                    courseNum++;
+                    if ((this.courses[originNum].single > 0 && this.thisweek % 2 == this.courses[originNum].single % 2) || this.courses[originNum].single == 0) { //判断单双周
+                      this.coursesOfThisWeek[courseNum] = this.courses[originNum];
+                      courseNum++;
+                    }
                   }
                 }
               });
@@ -116,8 +120,10 @@ export default {
               // '1-3'
               let strs = str.split(/[-]/);
               if (strs[0] <= this.thisweek && this.thisweek <= strs[1]) {
-                this.coursesOfThisWeek[courseNum] = this.courses[originNum];
-                courseNum++;
+                if ((this.courses[originNum].single > 0 && this.thisweek % 2 == this.courses[originNum].single % 2) || this.courses[originNum].single == 0) { //判断单双周
+                  this.coursesOfThisWeek[courseNum] = this.courses[originNum];
+                  courseNum++;
+                }
               }
             }
           } else {
@@ -125,8 +131,10 @@ export default {
             let strs = str.split(/[,]/);
             Object.keys(strs).forEach(i => {
               if (strs[i] == this.thisweek) {
-                this.coursesOfThisWeek[courseNum] = this.courses[originNum];
-                courseNum++;
+                if ((this.courses[originNum].single > 0 && this.thisweek % 2 == this.courses[originNum].single % 2) || this.courses[originNum].single == 0) { //判断单双周
+                  this.coursesOfThisWeek[courseNum] = this.courses[originNum];
+                  courseNum++;
+                }
               }
             });
           }
@@ -214,39 +222,6 @@ export default {
           }
         }
       }
-      /*if (this.thisweek == this.today.thisweek) { //调节宽度
-        for (let i = 0; i < 7; i++) {
-          let bodyid = "Row-" + i;
-          let headerid = "Header-" + i;
-          if (this.thisday % 7 == i) {
-            document.getElementById(bodyid).style.width = "18%";
-            document.getElementById(headerid).style.width = "18%";
-            document.getElementById(headerid).style.borderLeft =
-              "3px solid rgb(133, 183, 150)";
-            document.getElementById(headerid).style.borderRight =
-              "3px solid rgb(133, 183, 150)";
-            document.getElementById(headerid).style.backgroundColor =
-              "rgb(133, 183, 150)";
-            document.getElementById(
-              bodyid
-            ).style.backgroundColor = this.classcolor[0];
-          } else if (this.thisday % 7 != i) {
-            document.getElementById(bodyid).style.width = "13.8%";
-            document.getElementById(headerid).style.width = "13.8%";
-          }
-        }
-      } else if (this.thisweek != this.today.thisweek) {
-        for (let i = 0; i < 7; i++) {
-          let bodyid = "Row-" + i;
-          let headerid = "Header-" + i;
-          document.getElementById(bodyid).style.width = "14.2%";
-          document.getElementById(headerid).style.width = "14.2%";
-          document.getElementById(headerid).style.border = "none";
-          document.getElementById(headerid).style.background = "none";
-          document.getElementById(bodyid).style.backgroundColor =
-            "rgb(242, 242, 242)";
-        }
-      }*/
     },
     passClassInfo (i, j) {
       var InfoId = this.classInfos[i][j][2]
